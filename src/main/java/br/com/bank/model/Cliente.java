@@ -2,6 +2,7 @@ package br.com.bank.model;
 
 import br.com.bank.web.dto.ClienteCreateDto;
 import br.com.bank.web.dto.ClienteResponseDto;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -36,6 +37,10 @@ public class Cliente {
 
     @Column(name = "senha", nullable = false)
     private String password;
+
+    @OneToOne(mappedBy = "cliente", cascade = CascadeType.ALL)
+    private Conta conta;
+
 
     public static Cliente toCliente(ClienteCreateDto clienteCreateDto){
         Cliente cliente = new Cliente();

@@ -1,7 +1,9 @@
 package br.com.bank.service;
 
 import br.com.bank.model.Cliente;
+import br.com.bank.model.Conta;
 import br.com.bank.repository.IClienteRepository;
+import br.com.bank.repository.IContaRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,13 +16,26 @@ import java.util.List;
 public class ClienteService {
 
     private final IClienteRepository clienteRepository;
+    private final IContaRepository contaRepository;
 
     public Cliente criarNovoUsuario(Cliente cliente) {
         if (clienteRepository.existsByCpf(cliente.getCpf())) {
             throw new RuntimeException(String.format("Customer with CPF %s already registered", cliente.getCpf()));
         }
         try {
-            return clienteRepository.save(cliente);
+            Cliente clienteNovo = clienteRepository.save(cliente);
+
+            Conta conta = new Conta();
+            conta.setAgencia("0001");
+            conta.setNumero("4321");
+            conta.setCliente(clienteNovo);
+
+            contaRepository.save(conta);
+
+            clienteNovo.setConta(conta);
+            clienteRepository.save(clienteNovo);
+
+            return clienteNovo;
         } catch (DataIntegrityViolationException ex) {
             throw new RuntimeException("Erro ao salvar cliente", ex);
         }
@@ -40,7 +55,6 @@ public class ClienteService {
         Cliente cliente = clienteRepository.findByCpf(cpf).orElseThrow(
                 () -> new RuntimeException(String.format("Client CPF: %s not found", cpf)));
 
-        System.out.println(password);
         if (!password.equals(cliente.getPassword())) {
             throw new RuntimeException("incorrect password " + "Senha fornecida: '" + password + "'" + "Senha do cliente: '" + cliente.getPassword() + "'");
         }

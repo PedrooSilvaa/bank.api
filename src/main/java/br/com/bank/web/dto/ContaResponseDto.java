@@ -7,14 +7,12 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class ClienteResponseDto {
+public class ContaResponseDto {
 
     private Integer id;
-
-    private String name;
-
-    private String cpf;
-
+    private String agencia;
+    private String numero;
+    private Integer id_cliente;
 
 
 }

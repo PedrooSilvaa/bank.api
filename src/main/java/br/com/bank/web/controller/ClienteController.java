@@ -1,7 +1,8 @@
-package br.com.bank.web.dto;
+package br.com.bank.web.controller;
 
 import br.com.bank.model.Cliente;
 import br.com.bank.service.ClienteService;
+import br.com.bank.web.dto.ClienteResponseDto;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
