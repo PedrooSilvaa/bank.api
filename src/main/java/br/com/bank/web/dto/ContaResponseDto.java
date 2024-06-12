@@ -13,6 +13,7 @@ public class ContaResponseDto {
     private String agencia;
     private String numero;
     private Integer id_cliente;
+    private Double saldo;
 
 
 }
