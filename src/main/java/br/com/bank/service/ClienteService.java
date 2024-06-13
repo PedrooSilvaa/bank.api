@@ -27,7 +27,7 @@ public class ClienteService {
 
             Conta conta = new Conta();
             conta.setAgencia("0001");
-            conta.setNumero("4321");
+            conta.setNumero("1234");
             conta.setCliente(clienteNovo);
 
             contaRepository.save(conta);
