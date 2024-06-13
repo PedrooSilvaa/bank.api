@@ -1,6 +1,7 @@
 package br.com.bank.model;
 
 import br.com.bank.web.dto.ContaResponseDto;
+import br.com.bank.web.dto.TransacaoResponseDto;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -33,17 +34,19 @@ public class Transacao {
     @JoinColumn(name = "contaDestinatario")
     private Conta contaDestinatario;
 
-    public static Transacao toDto(Transacao transacao){
-        Transacao dto = new Transacao();
+    public static TransacaoResponseDto toDto(Transacao transacao){
+        TransacaoResponseDto dto = new TransacaoResponseDto();
         dto.setId(transacao.getId());
         dto.setTipo(transacao.getTipo());
         dto.setValor(transacao.getValor());
         dto.setData(transacao.getData());
+        dto.setIdOrigem(transacao.getContaOrigem().getId());
+        dto.setIdDestinatario(transacao.getContaDestinatario().getId());
         return dto;
     }
 
-    public static List<Transacao> toListDto(List<Transacao> transacoes){
-        List<Transacao> dtos = new ArrayList<>();
+    public static List<TransacaoResponseDto> toListDto(List<Transacao> transacoes){
+        List<TransacaoResponseDto> dtos = new ArrayList<>();
         for (Transacao transacao : transacoes){
             dtos.add(Transacao.toDto(transacao));
         }

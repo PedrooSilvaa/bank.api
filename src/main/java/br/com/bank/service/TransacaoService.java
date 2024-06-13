@@ -79,10 +79,6 @@ public class TransacaoService {
 
         contaRepository.save(contaOrigem);
 
-        Cliente cliente = clienteRepository.findById(contaOrigem.getCliente().getId()).orElseThrow(
-                () -> new RuntimeException("Cliente não encontrado!")
-        );
-
         Transacao transacao = new Transacao();
 
         transacao.setTipo("Saque");
@@ -107,7 +103,7 @@ public class TransacaoService {
 
         Transacao transacao = new Transacao();
 
-        transacao.setTipo("Saque");
+        transacao.setTipo("Deposito");
         transacao.setValor(valor);
         transacao.setContaOrigem(contaOrigem);
         transacao.setContaDestinatario(contaOrigem);

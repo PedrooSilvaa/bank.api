@@ -5,6 +5,7 @@ import br.com.bank.model.Transacao;
 import br.com.bank.service.ContaService;
 import br.com.bank.service.TransacaoService;
 import br.com.bank.web.dto.ContaResponseDto;
+import br.com.bank.web.dto.TransacaoResponseDto;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,41 +20,42 @@ public class TransacaoController {
     private final TransacaoService transacaoService;
     private final ContaService contaService;
 
-    @PostMapping("/pix")
-    public ResponseEntity<Transacao> createTransacaoPix(@RequestParam int idOrigem, int idDestinatario, double valor){
+    @PostMapping("/pix/{idOrigem}/{idDestinatario}/{valor}")
+    public ResponseEntity<TransacaoResponseDto> createTransacaoPix(@PathVariable int idOrigem, @PathVariable int idDestinatario, @PathVariable double valor){
         Transacao transacao = transacaoService.transacaoTipoPix(idOrigem, idDestinatario, valor);
-        return ResponseEntity.ok(transacao);
+        return ResponseEntity.ok(Transacao.toDto(transacao));
     }
-    @PostMapping("/tranferencia/{idOrigem}/{idDestinatario}/{valor}")
-    public ResponseEntity<Transacao> createTransacaoTranferencia(@PathVariable int idOrigem, @PathVariable int idDestinatario, @PathVariable double valor){
+
+    @PostMapping("/transferencia/{idOrigem}/{idDestinatario}/{valor}")
+    public ResponseEntity<TransacaoResponseDto> createTransacaoTranferencia(@PathVariable int idOrigem, @PathVariable int idDestinatario, @PathVariable double valor){
         Transacao transacao = transacaoService.transacaoTipoTranferencia(idOrigem, idDestinatario, valor);
-        return ResponseEntity.ok(transacao);
+        return ResponseEntity.ok(Transacao.toDto(transacao));
     }
 
-    @PostMapping("/saque")
-    public ResponseEntity<Transacao> createTransacaoSaque(@RequestParam int idOrigem, int idDestinatario, double valor){
+    @PostMapping("/saque/{idOrigem}/{idDestinatario}/{valor}")
+    public ResponseEntity<TransacaoResponseDto> createTransacaoSaque(@PathVariable int idOrigem, @PathVariable int idDestinatario, @PathVariable double valor){
         Transacao transacao = transacaoService.transacaoTipoSaque(idOrigem, idDestinatario, valor);
-        return ResponseEntity.ok(transacao);
+        return ResponseEntity.ok(Transacao.toDto(transacao));
     }
 
-    @PostMapping("/deposito")
-    public ResponseEntity<Transacao> createTransacaoDeposito(@RequestParam int idOrigem, int idDestinatario, double valor){
+    @PostMapping("/deposito/{idOrigem}/{idDestinatario}/{valor}")
+    public ResponseEntity<TransacaoResponseDto> createTransacaoDeposito(@PathVariable int idOrigem, @PathVariable int idDestinatario, @PathVariable double valor){
         Transacao transacao = transacaoService.transacaoTipoDeposito(idOrigem, idDestinatario, valor);
-        return ResponseEntity.ok(transacao);
+        return ResponseEntity.ok(Transacao.toDto(transacao));
     }
 
     @GetMapping("list/origem/{id}")
-        public ResponseEntity<List<Transacao>> listarTransacoesOrigem(@PathVariable int id){
+        public ResponseEntity<List<TransacaoResponseDto>> listarTransacoesOrigem(@PathVariable int id){
         Conta conta = contaService.findByIdCliente(id);
         List<Transacao> transacaos = transacaoService.listarTransacoesByContaOrigem(conta);
         return ResponseEntity.ok(Transacao.toListDto(transacaos));
         }
 
     @GetMapping("list/destino/{id}")
-    public List<Transacao> listarTransacoesDestinatario(@PathVariable int id){
+    public ResponseEntity<List<TransacaoResponseDto>> listarTransacoesDestinatario(@PathVariable int id){
         Conta conta = contaService.findByIdCliente(id);
-        List<Transacao> transacoes = transacaoService.listarTransacoesByContaDestinatario(conta);
-        return transacoes;
+        List<Transacao> transacaos = transacaoService.listarTransacoesByContaDestinatario(conta);
+        return ResponseEntity.ok(Transacao.toListDto(transacaos));
     }
 
 }
