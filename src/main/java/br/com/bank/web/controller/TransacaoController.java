@@ -20,15 +20,15 @@ public class TransacaoController {
     private final TransacaoService transacaoService;
     private final ContaService contaService;
 
-    @PostMapping("/pix/{idOrigem}/{idDestinatario}/{valor}")
-    public ResponseEntity<TransacaoResponseDto> createTransacaoPix(@PathVariable int idOrigem, @PathVariable int idDestinatario, @PathVariable double valor){
-        Transacao transacao = transacaoService.transacaoTipoPix(idOrigem, idDestinatario, valor);
+    @PostMapping("/pix/{idOrigem}/{numeroContaDestinatario}/{valor}")
+    public ResponseEntity<TransacaoResponseDto> createTransacaoPix(@PathVariable int idOrigem, @PathVariable String numeroContaDestinatario, @PathVariable double valor){
+        Transacao transacao = transacaoService.transacaoTipoPix(idOrigem, numeroContaDestinatario, valor);
         return ResponseEntity.ok(Transacao.toDto(transacao));
     }
 
-    @PostMapping("/transferencia/{idOrigem}/{idDestinatario}/{valor}")
-    public ResponseEntity<TransacaoResponseDto> createTransacaoTranferencia(@PathVariable int idOrigem, @PathVariable int idDestinatario, @PathVariable double valor){
-        Transacao transacao = transacaoService.transacaoTipoTranferencia(idOrigem, idDestinatario, valor);
+    @PostMapping("/transferencia/{idOrigem}/{numeroContaDestinatario}/{valor}")
+    public ResponseEntity<TransacaoResponseDto> createTransacaoTranferencia(@PathVariable int idOrigem, @PathVariable String numeroContaDestinatario, @PathVariable double valor){
+        Transacao transacao = transacaoService.transacaoTipoTranferencia(idOrigem, numeroContaDestinatario, valor);
         return ResponseEntity.ok(Transacao.toDto(transacao));
     }
 

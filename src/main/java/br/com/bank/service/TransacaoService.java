@@ -20,9 +20,11 @@ public class TransacaoService {
     private final IContaRepository contaRepository;
     private final IClienteRepository clienteRepository;
 
-    public Transacao transacaoTipoPix(int idContaOrigem, int idContaDestinatario, double valor){
+    public Transacao transacaoTipoPix(int idContaOrigem, String numeroContaDestinatario, double valor){
         Conta contaOrigem = contaRepository.findByClienteId(idContaOrigem);
-        Conta contaDestinatario = contaRepository.findByClienteId(idContaDestinatario);
+        Conta contaDestinatario = contaRepository.findByNumero(numeroContaDestinatario).orElseThrow(
+                () -> new RuntimeException("Conta não encontrada")
+        );
 
         contaOrigem.setSaldo(contaOrigem.getSaldo() - valor);
         contaDestinatario.setSaldo(contaDestinatario.getSaldo() + valor);
@@ -30,9 +32,7 @@ public class TransacaoService {
         contaRepository.save(contaOrigem);
         contaRepository.save(contaDestinatario);
 
-        Cliente clienteDestinatario = clienteRepository.findById(contaDestinatario.getCliente().getId()).orElseThrow(
-                () -> new RuntimeException("Cliente não encontrado!")
-        );
+
 
         Transacao transacao = new Transacao();
 
@@ -46,9 +46,11 @@ public class TransacaoService {
     }
 
 
-    public Transacao transacaoTipoTranferencia(int idContaOrigem, int idContaDestinatario, double valor){
+    public Transacao transacaoTipoTranferencia(int idContaOrigem, String numeroContaDestinatario, double valor){
         Conta contaOrigem = contaRepository.findByClienteId(idContaOrigem);
-        Conta contaDestinatario = contaRepository.findByClienteId(idContaDestinatario);
+        Conta contaDestinatario = contaRepository.findByNumero(numeroContaDestinatario).orElseThrow(
+                () -> new RuntimeException("Conta não encontrada")
+        );
 
         contaOrigem.setSaldo(contaOrigem.getSaldo() - valor);
         contaDestinatario.setSaldo(contaDestinatario.getSaldo() + valor);
@@ -56,9 +58,6 @@ public class TransacaoService {
         contaRepository.save(contaOrigem);
         contaRepository.save(contaDestinatario);
 
-        Cliente clienteDestinatario = clienteRepository.findById(contaDestinatario.getCliente().getId()).orElseThrow(
-                () -> new RuntimeException("Cliente não encontrado!")
-        );
 
         Transacao transacao = new Transacao();
 

@@ -10,6 +10,8 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.Random;
 
 @AllArgsConstructor
 @Service
@@ -19,6 +21,7 @@ public class ClienteService {
     private final IContaRepository contaRepository;
 
     public Cliente criarNovoUsuario(Cliente cliente) {
+        String numeroDaConta = gerarNumeroUnico();
         if (clienteRepository.existsByCpf(cliente.getCpf())) {
             throw new RuntimeException(String.format("Customer with CPF %s already registered", cliente.getCpf()));
         }
@@ -27,7 +30,7 @@ public class ClienteService {
 
             Conta conta = new Conta();
             conta.setAgencia("0001");
-            conta.setNumero("1234");
+            conta.setNumero(numeroDaConta);
             conta.setCliente(clienteNovo);
 
             contaRepository.save(conta);
@@ -39,6 +42,20 @@ public class ClienteService {
         } catch (DataIntegrityViolationException ex) {
             throw new RuntimeException("Erro ao salvar cliente", ex);
         }
+    }
+
+    public String gerarNumeroUnico(){
+        Random random = new Random();
+        String numeroConta;
+        boolean exists;
+
+        do {
+            numeroConta = String.format("%04d", random.nextInt(10000));
+            Optional<Conta> contaExistente = contaRepository.findByNumero(numeroConta);
+            exists = contaExistente.isPresent();
+        }while (exists);
+
+        return numeroConta;
     }
 
     public List<Cliente> listClientes(){
